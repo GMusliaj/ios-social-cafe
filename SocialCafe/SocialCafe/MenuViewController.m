@@ -28,7 +28,6 @@ MenuDataLoadDelegate>
 @property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (weak, nonatomic) IBOutlet UITableView *menuTableView;
 @property (strong, nonatomic) Menu *menu;
-@property (strong, nonatomic) UILabel *label;
 @property (strong, nonatomic) NSDictionary<FBGraphUser> *user;
 @property (strong, nonatomic) NSString *menuLink;
 @property (assign, nonatomic) NSUInteger selectedMenuIndex;
@@ -43,7 +42,6 @@ MenuDataLoadDelegate>
 @synthesize userNameLabel;
 @synthesize menuTableView;
 @synthesize menu = _menu;
-@synthesize label = _label;
 @synthesize user = _user;
 @synthesize menuLink = _menuLink;
 @synthesize selectedMenuIndex = _selectedMenuIndex;
@@ -55,13 +53,7 @@ MenuDataLoadDelegate>
  */
 - (void)populateUserDetails {
     if (FBSession.activeSession.isOpen) {
-        FBRequest *me = [FBRequest requestForMe];
-        [me startWithCompletionHandler: ^(FBRequestConnection *connection, 
-                                          NSDictionary<FBGraphUser> *my,
-                                          NSError *error) {
-            self.label.text = my.first_name;
-        }];
-        [[FBRequest requestForMe] startWithCompletionHandler:
+        [FBRequestConnection startForMeWithCompletionHandler:
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
              if (!error) {
                  self.userNameLabel.text = user.name;
