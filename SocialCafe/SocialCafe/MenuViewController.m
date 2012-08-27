@@ -34,6 +34,7 @@ MenuDataLoadDelegate>
 
 - (void)populateUserDetails;
 - (void)initMenuItems;
+- (void)goToSelectedMenu;
 
 @end
 
@@ -60,6 +61,11 @@ MenuDataLoadDelegate>
                  self.userProfilePictureView.profileID = [user objectForKey:@"id"];
                  self.menu.profileID = [user objectForKey:@"id"];
                  self.user = user;
+                 
+                 // If a deep link, go to the seleceted menu
+                 if (self.menuLink) {
+                     [self goToSelectedMenu];
+                 }
              }
          }];   
     }
@@ -141,13 +147,9 @@ MenuDataLoadDelegate>
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (FBSession.activeSession.isOpen && self.menuLink) {
-        [self goToSelectedMenu];
-    }
-    
     if (FBSession.activeSession.state == FBSessionStateOpen) {
-        // If the user's session is active personalize the
-        // experience
+        // If the user's session is active personalize
+        // the experience
         [self populateUserDetails];
     } else if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
         // If the session info is in cache, open the session but do not display
@@ -163,6 +165,8 @@ MenuDataLoadDelegate>
                                                       FBSessionState state,
                                                       NSError *error) {
             if (!error) {
+                // If the user's session is active personalize
+                // the experience
                 [self populateUserDetails];
             }
         }];

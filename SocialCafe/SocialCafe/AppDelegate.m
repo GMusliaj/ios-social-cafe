@@ -88,37 +88,31 @@
         [FBSession.activeSession close]; // so we close our session and start over
     }
     
-    // For an incoming deep link, because we care about a valid
-    // session, we'll check that first.
-    if (FBSession.activeSession.isOpen) {
-        // Process the saved URL
-        NSString *query = [self.openedURL fragment];
-        NSDictionary *params = [self parseURLParams:query];
-        // Check if target URL exists
-        if ([params valueForKey:@"target_url"]) {
-            // If the incoming link is a deep link then set things up to take the user to
-            // the menu view controller (if necessary), then pass along the deep link. The
-            // menu controller will take care of sending the user to the correct experience.
-            NSString *targetURL = [params valueForKey:@"target_url"];
-            
-            // Get the navigation controller.
-            UINavigationController *navController = (UINavigationController *) self.window.rootViewController;
-            // Get the menu view controller, the first view controller
-            MenuViewController *menuViewController =
-            (MenuViewController *) [[navController viewControllers] objectAtIndex:0];
-            
-            // Call the view controller method to set the deep link
-            [menuViewController initMenuFromUrl:targetURL];
-            id currentController = [navController topViewController];
-            // If necessary, pop to the menu view controller that is the
-            // root view controller.
-            if (![currentController isKindOfClass:[MenuViewController class]]) {
-                // The viewWillAppear will handle the redirect
-                [navController popToRootViewControllerAnimated:NO];
-            } else {
-                // Handle the redirect here
-                [menuViewController goToSelectedMenu];
-            }
+    // Check for an incoming deep link and set the info in the Menu View Controller
+    // Process the saved URL
+    NSString *query = [self.openedURL fragment];
+    NSDictionary *params = [self parseURLParams:query];
+    // Check if target URL exists
+    if ([params valueForKey:@"target_url"]) {
+        // If the incoming link is a deep link then set things up to take the user to
+        // the menu view controller (if necessary), then pass along the deep link. The
+        // menu controller will take care of sending the user to the correct experience.
+        NSString *targetURL = [params valueForKey:@"target_url"];
+        
+        // Get the navigation controller.
+        UINavigationController *navController = (UINavigationController *) self.window.rootViewController;
+        // Get the menu view controller, the first view controller
+        MenuViewController *menuViewController =
+        (MenuViewController *) [[navController viewControllers] objectAtIndex:0];
+        
+        // Call the view controller method to set the deep link
+        [menuViewController initMenuFromUrl:targetURL];
+        id currentController = [navController topViewController];
+        // If necessary, pop to the menu view controller that is the
+        // root view controller.
+        if (![currentController isKindOfClass:[MenuViewController class]]) {
+            // The menu view controller will handle the redirect
+            [navController popToRootViewControllerAnimated:NO];
         }
     }
 }
