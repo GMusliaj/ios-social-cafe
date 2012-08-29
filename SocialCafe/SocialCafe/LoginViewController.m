@@ -58,7 +58,6 @@
     NSArray *permissions = [NSArray arrayWithObjects:
                             @"publish_actions",
                             @"user_photos",
-                            @"email",
                             nil];
     [FBSession openActiveSessionWithPermissions:permissions
                                    allowLoginUI:YES

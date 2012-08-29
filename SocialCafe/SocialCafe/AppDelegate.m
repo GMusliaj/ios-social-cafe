@@ -113,6 +113,8 @@
         if (![currentController isKindOfClass:[MenuViewController class]]) {
             // The menu view controller will handle the redirect
             [navController popToRootViewControllerAnimated:NO];
+        } else {
+            [menuViewController populateUserDetails];
         }
     }
 }

@@ -32,7 +32,6 @@ MenuDataLoadDelegate>
 @property (strong, nonatomic) NSString *menuLink;
 @property (assign, nonatomic) NSUInteger selectedMenuIndex;
 
-- (void)populateUserDetails;
 - (void)initMenuItems;
 - (void)goToSelectedMenu;
 
@@ -137,8 +136,9 @@ MenuDataLoadDelegate>
     // Present login modal if necessary after the view has been
     // displayed, not in viewWillAppear: so as to allow display
     // stack to "unwind"
-    if (FBSession.activeSession.state == FBSessionStateOpen ||
-        FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
+    if (FBSession.activeSession.isOpen ||
+        FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded ||
+        FBSession.activeSession.state == FBSessionStateCreatedOpening) {
     } else {
         [self performSegueWithIdentifier:@"SegueToLogin" sender:self];
     }
@@ -157,7 +157,6 @@ MenuDataLoadDelegate>
         NSArray *permissions = [NSArray arrayWithObjects:
                                 @"publish_actions",
                                 @"user_photos",
-                                @"email",
                                 nil];
         [FBSession openActiveSessionWithPermissions:permissions
                                        allowLoginUI:NO
